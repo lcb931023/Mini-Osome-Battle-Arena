@@ -1,11 +1,17 @@
-//////////////game client script////////////////
+/*//////////////game client script////////////////
+Functionality:
+ - Set up Socket
+ - Send message through socket
+ - Set up Canvas
+ - Update Canvas
 
+**************************************************/
 /**************************************************
 ** GAME VARIABLES
 **************************************************/
 var canvas,			// Canvas DOM element
 	ctx,			// Canvas rendering context
-	keys,			// Keyboard input
+	inputs,			// Client input
 	localPlayer,	// Local player
 	remotePlayers,	// Remote player
 	socket;			// Socket
@@ -23,8 +29,8 @@ function init() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 
-	// Initialise keyboard controls
-	keys = new Keys();
+	// Initialise Client controls
+	inputs = new Inputs();
 
 	// Calculate a random start position for the local player
 	// The minus 5 (half a player size) stops the player being
@@ -53,9 +59,13 @@ function init() {
 ** GAME EVENT HANDLERS
 **************************************************/
 var setEventHandlers = function() {
-	// Keyboard
+	// Input
 	window.addEventListener("keydown", onKeydown, false);
 	window.addEventListener("keyup", onKeyup, false);
+	window.addEventListener("mousedown", onMouseDown, false);
+	window.addEventListener("mouseup", onMouseUp, false);
+	//record mouse position
+	window.addEventListener("mousemove", onMouseMove, false);
 
 	// Window resize
 	window.addEventListener("resize", onResize, false);
@@ -68,19 +78,40 @@ var setEventHandlers = function() {
 	socket.on("remove player", onRemovePlayer);
 };
 
+
+
 // Keyboard key down
 function onKeydown(e) {
 	if (localPlayer) {
-		keys.onKeyDown(e);
+		inputs.onKeyDown(e);
 	};
 };
 
 // Keyboard key up
 function onKeyup(e) {
 	if (localPlayer) {
-		keys.onKeyUp(e);
+		inputs.onKeyUp(e);
 	};
 };
+//mouse position
+function onMouseMove(e){
+	if (localPlayer) {
+		inputs.onMouseMove(e);
+	}
+}
+
+//Mouse Down
+function onMouseDown(e) {
+	if (localPlayer) {
+		inputs.onMouseDown(e);
+	}
+}
+//Mouse Up
+function onMouseUp(e) {
+	if (localPlayer) {
+		inputs.onMouseUp(e);
+	}
+}
 
 // Browser window resize
 function onResize(e) {
@@ -160,7 +191,7 @@ function animate() {
 **************************************************/
 function update() {
 	//send player position to the server if player position has changed
-	if(localPlayer.update(keys)) {
+	if(localPlayer.update(inputs)) {
 		socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
 	};
 };

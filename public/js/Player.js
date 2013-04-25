@@ -1,11 +1,13 @@
 /**************************************************
-** GAME PLAYER CLASS
+** CLIENT PLAYER CLASS
+Current Functionality: 
+Movement by Clicking
 **************************************************/
 var Player = function(startX, startY) {
 	var x = startX,
 		y = startY,
 		id,
-		moveAmount = 2;
+		movementSpeed = 2;
 		
 	//getters and setters
 	var getX = function() {
@@ -22,26 +24,50 @@ var Player = function(startX, startY) {
 	};
 	
 
-	var update = function(keys) {
-		//store the x,y before update is checked into variables
-		var prevX = x,
-			prevY = y;
-			
-		// Up key takes priority over down
-		if (keys.up) {
-			y -= moveAmount;
-		} else if (keys.down) {
-			y += moveAmount;
-		};
 
-		// Left key takes priority over right
-		if (keys.left) {
-			x -= moveAmount;
-		} else if (keys.right) {
-			x += moveAmount;
-		};
-		//compare the x,y. if unchanged, no need to update
-		return (prevX !=x || prevY != y) ? true : false;
+	/****Functionality functions.******
+	That sounds functional.
+	**********************************/
+	var move = function(inputs){
+		//if mouse is down
+		if (inputs.mDown){
+
+			//fetch the mouse's location. mouseLoc is always recorded by inputs
+			var mouseX = inputs.mX,
+				mouseY = inputs.mY;
+			//calculate the difference of x and y
+			var difX = mouseX - x;
+			var difY = mouseY - y;
+			//if there is a difference
+			if (difX != 0 && difY != 0){
+				//calculare distance
+				var dist = Math.sqrt(difX*difX + difY*difY);
+				//calculate change in x and y. refer to note pg.7
+				var dX = movementSpeed * difX / dist;
+				var dY = movementSpeed * difY / dist;
+				//update player position
+				x += dX; y += dY;
+				return true;
+			}
+		}
+		return false;//if all that moving didn't happen, return false		
+	}
+
+
+
+
+
+
+	/***End Functionality Function****/
+
+
+
+
+
+	var update = function(inputs) {
+		
+		//Check Movement; If there should be movement, the function returns true;
+		return (move(inputs)) ? true : false;
 	};
 
 	var draw = function(ctx) {
@@ -57,6 +83,7 @@ var Player = function(startX, startY) {
 		getY: getY,
 		setX: setX,
 		setY: setY,
+		move: move,
 		update: update,
 		draw: draw
 	}

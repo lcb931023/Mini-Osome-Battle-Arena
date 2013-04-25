@@ -1,4 +1,6 @@
-////////////////server Player class////////////
+/**************************************************
+** SERVER PLAYER CLASS
+**************************************************/
 
 var Player = function(startX, startY) {
 	var x = startX,

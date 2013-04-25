@@ -88,7 +88,7 @@ function onMovePlayer(data) {
 	//find the moved player
 	var movePlayer = playerById(this.id);
 	if (!movePlayer) {
-		util.log("Player not found: "+this.id);
+		util.log("Movement Player not found: "+this.id);
 		return;
 	};
 	//move the positions of it on the server

@@ -1,11 +1,17 @@
 /**************************************************
-** GAME KEYBOARD CLASS
+** GAME Input CLASS
 **************************************************/
-var Keys = function(up, left, right, down) {
+var Inputs = function(up, left, right, down, mDown, mX, mY) {
+	
 	var up = up || false,
 		left = left || false,
 		right = right || false,
-		down = down || false;
+		down = down || false,
+		mDown = mDown || false,
+		mX = mX || 0;
+		mY = mY || 0;
+
+	
 		
 	var onKeyDown = function(e) {
 		var that = this,
@@ -46,12 +52,35 @@ var Keys = function(up, left, right, down) {
 		};
 	};
 
-	return {
+	var onMouseDown = function(e) {
+		var that = this;
+		that.mDown = true;
+	}
+
+	var onMouseUp = function(e) {
+		var that = this;
+		that.mDown = false;
+	}
+
+	var onMouseMove = function(e){
+		var that = this;
+		//store mouse position
+		that.mX = e.clientX;
+		that.mY = e.clientY;
+	}
+
+	return {//return ALL the Properties and Functions
 		up: up,
 		left: left,
 		right: right,
 		down: down,
+		mDown: mDown,
+		mX: mX,
+		mY: mY,
 		onKeyDown: onKeyDown,
-		onKeyUp: onKeyUp
+		onKeyUp: onKeyUp,
+		onMouseDown: onMouseDown,
+		onMouseUp: onMouseUp,
+		onMouseMove: onMouseMove
 	};
 };
