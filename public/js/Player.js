@@ -7,7 +7,7 @@ var Player = function(startX, startY) {
 	var x = startX,
 		y = startY,
 		id,
-		movementSpeed = 2;
+		movementSpeed = 5;
 		
 	//getters and setters
 	var getX = function() {
@@ -30,7 +30,7 @@ var Player = function(startX, startY) {
 	**********************************/
 	var move = function(inputs){
 		//if mouse is down
-		if (inputs.mDown){
+		if (inputs.mDownR){
 
 			//fetch the mouse's location. mouseLoc is always recorded by inputs
 			var mouseX = inputs.mX,

@@ -1,14 +1,16 @@
 /**************************************************
 ** GAME Input CLASS
 **************************************************/
-var Inputs = function(up, left, right, down, mDown, mX, mY) {
+var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mX, mY) {
 	
 	var up = up || false,
 		left = left || false,
 		right = right || false,
 		down = down || false,
-		mDown = mDown || false,
-		mX = mX || 0;
+		mDownL = mDownL ||false,
+		mDownM = mDownM ||false,
+		mDownR = mDownR || false,
+		mX = mX || 0,
 		mY = mY || 0;
 
 	
@@ -53,13 +55,36 @@ var Inputs = function(up, left, right, down, mDown, mX, mY) {
 	};
 
 	var onMouseDown = function(e) {
-		var that = this;
-		that.mDown = true;
+		var that = this,
+			c = e.button;
+		switch (c) {
+			case 0: //left
+				that.mDownL = true;
+				break;
+			case 1: //middle
+				that.mDownM = true;
+				break;
+			case 2: //right
+				that.mDownR = true;
+				break;
+		}
 	}
 
 	var onMouseUp = function(e) {
-		var that = this;
-		that.mDown = false;
+		var that = this,
+			c = e.button;
+		switch (c) {
+			case 0: //left
+				that.mDownL = false;
+				break;
+			case 1: //middle
+				that.mDownM = false;
+				break;
+			case 2: //right
+				that.mDownR = false;
+				break;
+		}
+		
 	}
 
 	var onMouseMove = function(e){
@@ -74,7 +99,9 @@ var Inputs = function(up, left, right, down, mDown, mX, mY) {
 		left: left,
 		right: right,
 		down: down,
-		mDown: mDown,
+		mDownL: mDownL,
+		mDownM: mDownM,
+		mDownR: mDownR,
 		mX: mX,
 		mY: mY,
 		onKeyDown: onKeyDown,

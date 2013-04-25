@@ -25,9 +25,14 @@ function init() {
 	canvas = document.getElementById("gameCanvas");
 	ctx = canvas.getContext("2d");
 
-	// Maximise the canvas
+	// Maximize the canvas
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
+
+	// disable right click's context menu
+	canvas.oncontextmenu = function() {
+	     return false;  
+	} 
 
 	// Initialise Client controls
 	inputs = new Inputs();
