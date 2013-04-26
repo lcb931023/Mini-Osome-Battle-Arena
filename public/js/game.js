@@ -64,13 +64,14 @@ function init() {
 ** GAME EVENT HANDLERS
 **************************************************/
 var setEventHandlers = function() {
+	//record mouse position
+	window.addEventListener("mousemove", onMouseMove, false);
 	// Input
 	window.addEventListener("keydown", onKeydown, false);
 	window.addEventListener("keyup", onKeyup, false);
 	window.addEventListener("mousedown", onMouseDown, false);
 	window.addEventListener("mouseup", onMouseUp, false);
-	//record mouse position
-	window.addEventListener("mousemove", onMouseMove, false);
+	
 
 	// Window resize
 	window.addEventListener("resize", onResize, false);

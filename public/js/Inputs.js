@@ -1,7 +1,7 @@
 /**************************************************
 ** GAME Input CLASS
 **************************************************/
-var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mX, mY) {
+var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mDRX, mDRY, mX, mY) {
 	
 	var up = up || false,
 		left = left || false,
@@ -10,6 +10,8 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mX, mY) {
 		mDownL = mDownL ||false,
 		mDownM = mDownM ||false,
 		mDownR = mDownR || false,
+		mDRX = mDRX || 0,
+		mDRY = mDRY || 0,
 		mX = mX || 0,
 		mY = mY || 0;
 
@@ -66,6 +68,9 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mX, mY) {
 				break;
 			case 2: //right
 				that.mDownR = true;
+				//update mdrx and mdry
+				that.mDRX = that.mX;
+				that.mDRY = that.mY;
 				break;
 		}
 	}
@@ -92,6 +97,11 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mX, mY) {
 		//store mouse position
 		that.mX = e.clientX;
 		that.mY = e.clientY;
+		//update mDRX and mDRY if mDownR = true
+		if (that.mDownR) {
+			that.mDRX = that.mX;
+			that.mDRY = that.mY;
+		};
 	}
 
 	return {//return ALL the Properties and Functions
@@ -102,6 +112,8 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mX, mY) {
 		mDownL: mDownL,
 		mDownM: mDownM,
 		mDownR: mDownR,
+		mDRX: mDRX,
+		mDRY: mDRY,
 		mX: mX,
 		mY: mY,
 		onKeyDown: onKeyDown,
