@@ -154,8 +154,13 @@ function onMovePlayer(data){
 		console.log("Player not found: "+data.id);
 		return;
 	};
+	currentX = movePlayer.getX();
+	currentY = movePlayer.getY();
+	dX = data.x - currentX;
+	dY = data.y - currentY;
+	movePlayer.updateMoveDirection(dX, dY);
 	movePlayer.setX(data.x);
-	movePlayer.setY(data.y);
+	movePlayer.setY(data.y);	
 };
 
 function onRemovePlayer(data){
@@ -200,6 +205,7 @@ function update() {
 	if(localPlayer.update(inputs)) {
 		socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
 	};
+	
 };
 
 

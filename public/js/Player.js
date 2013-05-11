@@ -101,7 +101,6 @@ var Player = function(startX, startY) {
 			}
 		}
 	}
-
 	
 	var update = function(inputs) {
 		//Check Movement; If there should be movement, the function returns true;
@@ -124,6 +123,7 @@ var Player = function(startX, startY) {
 		setX: setX,
 		setY: setY,
 		move: move,
+		updateMoveDirection:updateMoveDirection,
 		update: update,
 		draw: draw
 	}
