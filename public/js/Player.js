@@ -2,12 +2,14 @@
 ** CLIENT PLAYER CLASS
 Current Functionality: 
 Movement by Clicking
+
 **************************************************/
 var Player = function(startX, startY) {
 	var x = startX,
 		y = startY,
 		id,
-		movementSpeed = 5;
+		movementSpeed = 5,
+		state = "r";
 		
 	//getters and setters
 	var getX = function() {
@@ -29,54 +31,30 @@ var Player = function(startX, startY) {
 	That sounds functional.
 	**********************************/
 	var move = function(inputs){
-
-		/* so, time to make this better...
-		 - um. so. when you, um, right click on some position
-		 - it records the position clicked
-		 - and do the same calculation, except this time it need to take consideration of the minimum movement range
-		 	- i mean, if it moves by movementSpeed each update
-		 	- then it shouldn't move when the mDowmR position is within the range of movement speed
-		 	- for efficiency, we can rough that range up by a rectangle around mDownR pos. or just use dist
-		 - so what's the starting value of mDRX/mDRY?
-		 - 
-		 - make inputs store:
-		 	- if mouseR is down, update the value of mDRX/mDRY
-		 - var move = function(inputs)
-		 	- if the future position is far enough from x/y
-		 		- make moves son
-				- return true
-		 	- otherwise, return false
-		*/
-
 		//fetch the mouse's location. mouseLoc is always recorded by inputs
 		var futureX = inputs.mDRX,
 			futureY = inputs.mDRY;
 		//calculate the difference of x and y
 		var difX = futureX - x;
 		var difY = futureY - y;
-
-		//if the future position is further than minimum movement 
-		//aka movementSpeed
+		//if the future position is further than min move aka moveSpeed
 		//move an amount toward there and return true
 		if (
 			Math.abs(difX) > movementSpeed ||
 			Math.abs(difY) > movementSpeed
 			){
-
-			
 			//calculare distance
 			var dist = Math.sqrt(difX*difX + difY*difY);
 			//calculate change in x and y. refer to note pg.7
 			var dX = movementSpeed * difX / dist;
 			var dY = movementSpeed * difY / dist;
+			updateMoveDirection(dX,dY);
 			//update player position
 			x += dX; y += dY;
 			return true;
-		
 		}
 		//if there's still movement, 
-		//but the future position is not further than minimum movement 
-		//aka movementSpeed
+		//but the future position is not further than min move aka moveSpeed
 		//just move to future position and return true
 		if (
 			difX != 0 || difY != 0
@@ -86,26 +64,54 @@ var Player = function(startX, startY) {
 		}
 		return false;//if all that moving didn't happen, return false		
 	}
-
-
-
-
-
-
 	/***End Functionality Function****/
 
+	function updateMoveDirection(dX,dY){
+		var absTan = Math.abs(dY / dX); // note pg.10
+		//Up and Down
+		if (absTan > 2.414){
+			if(dY<0){
+				state = "u";
+			}else{
+				state = "d";
+			}
+		}
+		//Left and Right
+		else if (absTan < 0.414){
+			if(dX<0){
+				state = "l";
+			}else{
+				state = "r";
+			}
+		}
+		//diagonals
+		else{
+			if(dY<0){
+				if(dX<0){
+					state = "ul";
+				}else{
+					state = "ur";
+				}
+			}else{
+				if(dX<0){
+					state = "dl";
+				}else{
+					state = "dr";
+				}
+			}
+		}
+	}
 
-
-
-
+	
 	var update = function(inputs) {
-		
 		//Check Movement; If there should be movement, the function returns true;
 		return (move(inputs)) ? true : false;
 	};
-
+//draw the player depending on its current state
 	var draw = function(ctx) {
-		ctx.fillRect(x-5, y-5, 10, 10);
+		var p = spriteParts["tank"][state];
+		//console.log(p);
+		ctx.drawImage(images["tank"],p.x,p.y,p.w,p.h,x,y,p.w*4,p.h*4);
 	};
 
 	return {
