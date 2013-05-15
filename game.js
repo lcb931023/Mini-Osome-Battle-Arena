@@ -48,6 +48,7 @@ function onSocketConnection(client) {
 	client.on("disconnect", onClientDisconnect);
 	client.on("new player", onNewPlayer);
 	client.on("move player", onMovePlayer);
+	client.on("attack player", onAttackPlayer);
 };
 
 function onClientDisconnect(){//placeholder
@@ -88,8 +89,7 @@ function onMovePlayer(data) {
 	//find the moved player
 	var movePlayer = playerById(this.id);
 	if (!movePlayer) {
-		util.log("Movement Player not found: "+this.id);
-		return;
+		util.log("Movement Player not found: "+this.id);return;
 	};
 	//move the positions of it on the server
 	movePlayer.setX(data.x);
@@ -97,6 +97,16 @@ function onMovePlayer(data) {
 	//send the new position to all clients
 	this.broadcast.emit("move player", {id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY()});
 };
+
+function onAttackPlayer(data) {
+	var attacker = playerById(this.id);
+	var target = playerById(data.targetID);
+	if(!attacker) {util.log("Attacker not found: "+this.id);return;}
+	if(!target) {util.log("Target not found: "+data.targetID);return;}
+	target.setHp(10);
+	this.emit("attack player", {attackerID: this.id, targetID: target.id, hp:target.getHp()});
+	this.broadcast.emit("attack player", {attackerID: this.id, targetID: target.id, hp:target.getHp()});
+}
 
 //utility: find the players by id in the array quickly
 function playerById(id)	{

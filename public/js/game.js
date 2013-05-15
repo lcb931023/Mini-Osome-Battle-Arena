@@ -34,14 +34,16 @@ function init() {
 	     return false;  
 	} 
 
-	// Initialise Client controls
-	inputs = new Inputs();
-
+	
 	// Calculate a random start position for the local player
 	// The minus 5 (half a player size) stops the player being
 	// placed right on the egde of the screen
 	var startX = Math.round(Math.random()*(canvas.width-5)),
 		startY = Math.round(Math.random()*(canvas.height-5));
+
+	// Initialise Client controls
+	inputs = new Inputs(startX, startY);
+
 
 	// Initialise the local player
 	localPlayer = new Player(startX, startY);
@@ -81,6 +83,7 @@ var setEventHandlers = function() {
 	socket.on("disconnect", onSocketDisconnect);
 	socket.on("new player", onNewPlayer);
 	socket.on("move player", onMovePlayer);
+	socket.on("attack player", onAttackPlayer);
 	socket.on("remove player", onRemovePlayer);
 };
 
@@ -129,6 +132,8 @@ function onResize(e) {
 //*****socket event handlers*****
 function onSocketConnected(){
 	console.log("Connected to socket server");
+	//assign the client's id to itself
+	localPlayer.id = this.socket.sessionid;
 	//tell the server to create a new player when you connected
 	socket.emit("new player", {x: localPlayer.getX(), y:localPlayer.getY()});
 };
@@ -162,6 +167,23 @@ function onMovePlayer(data){
 	movePlayer.setX(data.x);
 	movePlayer.setY(data.y);	
 };
+
+function onAttackPlayer(data){
+	//if playerById cannot find it, that means the client itself is the target/attacker
+	var attacker = playerById(data.attackerID);
+	var target = playerById(data.targetID);
+	if(!attacker) {//that means the attacker is probably 
+		if(data.attackerID == localPlayer.id){
+			attacker = localPlayer;
+		}else{console.log("Attacker not found: "+data.attackerID);return;}
+	}
+	if(!target) {
+		if(data.targetID == localPlayer.id){
+			target = localPlayer;
+		}else{console.log("Target not found: "+data.targetID);return;}
+	}
+	target.setHp(data.hp);
+}
 
 function onRemovePlayer(data){
 	//find the disconnected player.
@@ -198,14 +220,17 @@ function animate() {
 
 
 /**************************************************
-** GAME UPDATE
+** sending events to server since 2013
 **************************************************/
 function update() {
-	//send player position to the server if player position has changed
-	if(localPlayer.update(inputs)) {
+	if(localPlayer.move(inputs)) {
 		socket.emit("move player", {x: localPlayer.getX(), y: localPlayer.getY()});
 	};
-	
+	var targetIndex = localPlayer.attack(inputs);//returns -1 if no target
+	if(targetIndex+1) {
+		console.log(remotePlayers[targetIndex].id);
+		socket.emit("attack player", {targetID:remotePlayers[targetIndex].id});
+	}
 };
 
 

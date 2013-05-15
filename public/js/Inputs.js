@@ -1,7 +1,9 @@
 /**************************************************
 ** GAME Input CLASS
+ - mDRX, mDRY, mDLX, mDLY are stored everytime mouse is down
+ - so even if mouse is out, they still remain their value
 **************************************************/
-var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mDRX, mDRY, mX, mY) {
+var Inputs = function(mDRX, mDRY) {
 	
 	var up = up || false,
 		left = left || false,
@@ -10,6 +12,8 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mDRX, mDRY,
 		mDownL = mDownL ||false,
 		mDownM = mDownM ||false,
 		mDownR = mDownR || false,
+		mDLX = mDLX || 0,
+		mDLY = mDLY || 0,
 		mDRX = mDRX || 0,
 		mDRY = mDRY || 0,
 		mX = mX || 0,
@@ -62,6 +66,8 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mDRX, mDRY,
 		switch (c) {
 			case 0: //left
 				that.mDownL = true;
+				that.mDLX = that.mX;
+				that.mDLY = that.mY;
 				break;
 			case 1: //middle
 				that.mDownM = true;
@@ -98,6 +104,10 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mDRX, mDRY,
 		that.mX = e.clientX;
 		that.mY = e.clientY;
 		//update mDRX and mDRY if mDownR = true
+		if (that.mDownL) {
+			that.mDLX = that.mX;
+			that.mDLY = that.mY;
+		};
 		if (that.mDownR) {
 			that.mDRX = that.mX;
 			that.mDRY = that.mY;
@@ -112,6 +122,8 @@ var Inputs = function(up, left, right, down, mDownL, mDownM, mDownR, mDRX, mDRY,
 		mDownL: mDownL,
 		mDownM: mDownM,
 		mDownR: mDownR,
+		mDLX: mDLX,
+		mDLY: mDLY,
 		mDRX: mDRX,
 		mDRY: mDRY,
 		mX: mX,

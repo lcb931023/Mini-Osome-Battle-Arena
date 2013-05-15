@@ -5,8 +5,10 @@
 var Player = function(startX, startY) {
 	var x = startX,
 		y = startY,
+		hp = 100,
+		hitBox = 100,
+		attackRange = 10,
 		id;
-	//gettars and settars for x n y	
 	var getX = function() {
 		return x;
 	};
@@ -19,6 +21,12 @@ var Player = function(startX, startY) {
 	var setY = function(newY) {
 		y = newY;
 	};
+	var getHp = function() {
+		return hp;
+	}
+	var setHp = function(newHp) {
+		hp = newHp;
+	}
 	
 	return {
 	//colon here is used just like
@@ -28,6 +36,8 @@ var Player = function(startX, startY) {
 		getY: getY,
 		setX: setX,
 		setY: setY,
+		getHp:getHp,
+		setHp:setHp,
 		id: id
 	}
 };

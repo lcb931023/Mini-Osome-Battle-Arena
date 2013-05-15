@@ -7,8 +7,11 @@ Movement by Clicking
 var Player = function(startX, startY) {
 	var x = startX,
 		y = startY,
+		hp = 100,
 		id,
+		hitBox = 100,
 		movementSpeed = 5,
+		attackRange = 10,
 		state = "r";
 		
 	//getters and setters
@@ -24,12 +27,15 @@ var Player = function(startX, startY) {
 	var setY = function(newY) {
 		y = newY;
 	};
+	var setHp = function(newHp) {
+		hp = newHp;
+	};
+	var getHitBox = function(){
+		return hitBox;
+	};
 	
 
 
-	/****Functionality functions.******
-	That sounds functional.
-	**********************************/
 	var move = function(inputs){
 		//fetch the mouse's location. mouseLoc is always recorded by inputs
 		var futureX = inputs.mDRX,
@@ -64,7 +70,6 @@ var Player = function(startX, startY) {
 		}
 		return false;//if all that moving didn't happen, return false		
 	}
-	/***End Functionality Function****/
 
 	function updateMoveDirection(dX,dY){
 		var absTan = Math.abs(dY / dX); // note pg.10
@@ -102,15 +107,43 @@ var Player = function(startX, startY) {
 		}
 	}
 	
+	var attack = function(inputs){
+		if (inputs.mDownL){
+			var aX = inputs.mDLX,
+				aY = inputs.mDLY;
+			return checkAttackTarget(aX,aY);
+		}
+		return -1;
+	}
+
+	function checkAttackTarget(aX,aY){//figure out which player this is attacking
+		for (var i = remotePlayers.length - 1; i >= 0; i--) {
+			var rX = remotePlayers[i].getX(),
+				rY = remotePlayers[i].getY(),
+				rHB= remotePlayers[i].getHitBox();
+			var difX = rX - aX,
+				difY = rY - aY;
+			if (
+				Math.abs(difX) <= rHB/2 &&
+				Math.abs(difY) <= rHB/2
+			) {
+				return i;
+			}
+		}
+		return -1;//in case there's no enemy
+	}
+
 	var update = function(inputs) {
 		//Check Movement; If there should be movement, the function returns true;
-		return (move(inputs)) ? true : false;
 	};
 //draw the player depending on its current state
 	var draw = function(ctx) {
 		var p = spriteParts["tank"][state];
-		//console.log(p);
-		ctx.drawImage(images["tank"],p.x,p.y,p.w,p.h,x,y,p.w*4,p.h*4);
+		//draw hp bar
+		ctx.fillStyle="1BE01E";
+		ctx.fillRect(x-p.w*2,y-p.h*2-20,p.w*4*hp/100,5);
+		//draw sprite
+		ctx.drawImage(images["tank"],p.x,p.y,p.w,p.h,x-p.w*2,y-p.h*2,p.w*4,p.h*4);
 	};
 
 	return {
@@ -122,9 +155,13 @@ var Player = function(startX, startY) {
 		getY: getY,
 		setX: setX,
 		setY: setY,
+		setHp: setHp,
+		getHitBox: getHitBox,
 		move: move,
+		attack: attack,
 		updateMoveDirection:updateMoveDirection,
 		update: update,
-		draw: draw
+		draw: draw,
+		id : id
 	}
 };
