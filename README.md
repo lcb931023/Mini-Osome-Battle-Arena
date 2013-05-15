@@ -1,5 +1,4 @@
 
-
 # Mini Osome Browser Arena
 
 ######Changbai Li
@@ -18,4 +17,4 @@ _________________
 - Javascript
 
 #####Development
-Spiral Model - develop a prototype, test, evaluate, repeat.
+Agile Model: Make it work, add functionality, repeat.
