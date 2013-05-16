@@ -7,7 +7,7 @@ var Player = function(startX, startY) {
 		y = startY,
 		hp = 100,
 		hitBox = 100,
-		attackRange = 10,
+		attackRange = 140,
 		id;
 	var getX = function() {
 		return x;
@@ -27,6 +27,26 @@ var Player = function(startX, startY) {
 	var setHp = function(newHp) {
 		hp = newHp;
 	}
+
+	var receiveAttack = function(dmg,atkRange,aX,aY,tX,tY) {
+		if (checkAttackRange(atkRange,aX,aY,tX,tY)){
+			return reduceHp(dmg);
+		}
+		return -1;
+	}
+
+	function reduceHp(dmg){
+		hp -= dmg;
+		if (hp<=0)hp=0;
+		return hp;
+	}
+
+	function checkAttackRange(atkRange,aX,aY,tX,tY){
+		var difX = aX - tX,
+			difY = aY - tY;
+		var distSqr = difX*difX + difY*difY;
+		return distSqr < atkRange*atkRange ? true:false;
+	}
 	
 	return {
 	//colon here is used just like
@@ -38,6 +58,7 @@ var Player = function(startX, startY) {
 		setY: setY,
 		getHp:getHp,
 		setHp:setHp,
+		receiveAttack: receiveAttack,
 		id: id
 	}
 };

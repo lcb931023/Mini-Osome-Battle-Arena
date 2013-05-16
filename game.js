@@ -51,7 +51,7 @@ function onSocketConnection(client) {
 	client.on("attack player", onAttackPlayer);
 };
 
-function onClientDisconnect(){//placeholder
+function onClientDisconnect(){
 	util.log("Player has disconnected: "+this.id);//this refers to the client variable from the onSocketConnection function
 	//find the disconnected player.
 	var removePlayer = playerById(this.id);
@@ -103,9 +103,15 @@ function onAttackPlayer(data) {
 	var target = playerById(data.targetID);
 	if(!attacker) {util.log("Attacker not found: "+this.id);return;}
 	if(!target) {util.log("Target not found: "+data.targetID);return;}
-	target.setHp(10);
-	this.emit("attack player", {attackerID: this.id, targetID: target.id, hp:target.getHp()});
-	this.broadcast.emit("attack player", {attackerID: this.id, targetID: target.id, hp:target.getHp()});
+	if (target.receiveAttack(1,data.atkRange,attacker.getX(),attacker.getY(),target.getX(),target.getY()) + 1){
+		this.emit("attack player", {attackerID: this.id, targetID: target.id, hp:target.getHp()});
+		this.broadcast.emit("attack player", {attackerID: this.id, targetID: target.id, hp:target.getHp()});
+	}
+	if (target.getHp() == 0){
+		players.splice(players.indexOf(target), 1);
+		this.emit("remove player", {id: target.id});
+		this.broadcast.emit("remove player", {id: target.id});
+	}
 }
 
 //utility: find the players by id in the array quickly

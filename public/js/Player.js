@@ -11,7 +11,7 @@ var Player = function(startX, startY) {
 		id,
 		hitBox = 100,
 		movementSpeed = 5,
-		attackRange = 10,
+		attackRange = 140,
 		state = "r";
 		
 	//getters and setters
@@ -26,6 +26,12 @@ var Player = function(startX, startY) {
 	};
 	var setY = function(newY) {
 		y = newY;
+	};
+	var getAttackRange = function() {
+		return attackRange;
+	};
+	var getHp = function() {
+		return hp;
 	};
 	var setHp = function(newHp) {
 		hp = newHp;
@@ -133,9 +139,7 @@ var Player = function(startX, startY) {
 		return -1;//in case there's no enemy
 	}
 
-	var update = function(inputs) {
-		//Check Movement; If there should be movement, the function returns true;
-	};
+	
 //draw the player depending on its current state
 	var draw = function(ctx) {
 		var p = spriteParts["tank"][state];
@@ -155,6 +159,8 @@ var Player = function(startX, startY) {
 		getY: getY,
 		setX: setX,
 		setY: setY,
+		getAttackRange: getAttackRange,
+		getHp: getHp,
 		setHp: setHp,
 		getHitBox: getHitBox,
 		move: move,

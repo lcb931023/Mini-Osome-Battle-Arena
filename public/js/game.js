@@ -206,6 +206,13 @@ function playerById(id)	{
 	//and if there's no matching players...
 	return false;
 };
+//reset the game when player health drops to zero
+function resetGame(){
+	remotePlayers = [];
+	socket.emit("disconnect");
+	console.log("IM DEAD");
+	window.location.reload();
+}
 
 /**************************************************
 ** GAME ANIMATION LOOP
@@ -228,8 +235,12 @@ function update() {
 	};
 	var targetIndex = localPlayer.attack(inputs);//returns -1 if no target
 	if(targetIndex+1) {
-		console.log(remotePlayers[targetIndex].id);
-		socket.emit("attack player", {targetID:remotePlayers[targetIndex].id});
+		//console.log(remotePlayers[targetIndex].id);
+		socket.emit("attack player", {targetID:remotePlayers[targetIndex].id, atkRange: localPlayer.getAttackRange()});
+	}
+	//check for death
+	if(localPlayer.getHp()==0){
+		resetGame();
 	}
 };
 
