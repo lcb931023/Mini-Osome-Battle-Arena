@@ -4,10 +4,10 @@ Current Functionality:
 Movement by Clicking
 
 **************************************************/
-var Player = function(startX, startY) {
+var Player = function(startX, startY,startHp) {
 	var x = startX,
 		y = startY,
-		hp = 100,
+		hp = startHp,
 		id,
 		hitBox = 100,
 		movementSpeed = 5,

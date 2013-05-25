@@ -26,7 +26,7 @@ function init(){
 	
 	
 	//get the socket server listening on a port
-	socket = io.listen(8000);
+	socket = io.listen(8070);
 	//optional: limits socket.io to using WebSockets and not falling back to anything else. This step also reduces workload from sockets.io to terminal
 	socket.configure(function() {
 		socket.set("transports", ["websocket"]);
@@ -74,12 +74,14 @@ function onNewPlayer(data) {
 	//*this.broadcast.emit sends the message to all clients except the current one
 	//*while this.emit sends it to only the current one
 	//send this new player(client) to other player(client) by broadcasting it
-	this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
+	this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY(), hp: newPlayer.getHp()});
+	util.log("This Player: "+newPlayer.id+" "+ newPlayer.getHp());
 	//send existing client's player to this new client's player
 	var i, existingPlayer;
 	for (i = 0; i < players.length; i++) {
 		existingPlayer = players[i];
-		this.emit("new player", {id: existingPlayer.id, x: existingPlayer.getX(), y: existingPlayer.getY()});
+		this.emit("new player", {id: existingPlayer.id, x: existingPlayer.getX(), y: existingPlayer.getY(), hp: existingPlayer.getHp()});
+		util.log("Other Player: "+existingPlayer.id+" "+ existingPlayer.getHp());
 	};
 	//add this new player to the players array
 	players.push(newPlayer);
