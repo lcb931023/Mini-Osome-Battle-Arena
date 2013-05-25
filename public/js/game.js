@@ -39,19 +39,21 @@ function init() {
 	// The minus 5 (half a player size) stops the player being
 	// placed right on the egde of the screen
 	var startX = Math.round(Math.random()*(canvas.width-5)),
-		startY = Math.round(Math.random()*(canvas.height-5));
+		startY = Math.round(Math.random()*(canvas.height-5)),
+		startHp = 100
+		;
 
 	// Initialise Client controls
 	inputs = new Inputs(startX, startY);
 
 
 	// Initialise the local player
-	localPlayer = new Player(startX, startY);
+	localPlayer = new Player(startX, startY, startHp);
 
 	//initialise the socket connection to the server
 	//*io.connect connects you to a socket.io server by using the first param as server address.
 	//*second param customizes some option.
-	socket = io.connect("http://localhost", {port:8000, transports:["websocket"]});
+	socket = io.connect("http://localhost", {port:8070, transports:["websocket"]});
 
 	//initiate empty remotePlayer array that stores other players on the server
 	remotePlayers = [];
@@ -145,7 +147,8 @@ function onSocketDisconnect(){
 function onNewPlayer(data){
 	console.log("New player connected: "+data.id);
 	//create a new player object based on the position data sent from le server, 
-	var newPlayer = new Player(data.x, data.y);
+	var newPlayer = new Player(data.x, data.y, data.hp);
+	console.log("ID: "+data.id+"HP: " + data.hp);
 	//then sets the id of player, 
 	newPlayer.id = data.id;
 	//and adds to remotePlayers
