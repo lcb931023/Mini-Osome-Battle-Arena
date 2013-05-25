@@ -210,8 +210,7 @@ function playerById(id)	{
 function resetGame(){
 	remotePlayers = [];
 	socket.emit("disconnect");
-	console.log("IM DEAD");
-	window.location.reload();
+	//window.location.reload();
 }
 
 /**************************************************
